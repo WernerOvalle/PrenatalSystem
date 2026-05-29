@@ -1,0 +1,13 @@
+# Reconoce explícitamente las dependencias con build scripts.
+# Se ponen en false acorde a la política `ignore-scripts` del .npmrc de fendo:
+# no se ejecutan. No hacen falta — el export estático usa images.unoptimized
+# (sharp no se necesita) y Next/SWC trae binarios precompilados.
+allowBuilds:
+  sharp: false
+  unrs-resolver: false
+
+# Fuerza la versión parcheada de postcss (Next 16 trae 8.4.31, vulnerable a
+# GHSA-qx2v-qp2m-jg93). Sube a la misma 8.5.x que ya usa Tailwind. Acorde a
+# trust-policy=no-downgrade: solo subimos versión, nunca bajamos.
+overrides:
+  postcss@<8.5.10: ">=8.5.10"

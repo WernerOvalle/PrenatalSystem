@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Control Prenatal
 
-## Getting Started
+Web app para **registro y control prenatal** de gestantes. Construida con Next.js 16 (App Router) y exportación estática. Toda la información se guarda en el navegador con **localStorage** — no hay backend ni base de datos.
 
-First, run the development server:
+## Funcionalidades
+
+- **Panel general**: total de gestantes, controles del mes, próximas citas y alertas de alto riesgo.
+- **Registro de gestantes**: datos personales, obstétricos (FUM, talla, peso, grupo sanguíneo) y antecedentes.
+- **Control prenatal**: peso, presión arterial, altura uterina, FCF, movimientos fetales, edemas, observaciones y próxima cita.
+- **Cálculos automáticos**: edad gestacional (`sem+días`), fecha probable de parto (regla de Naegele), trimestre.
+- **Clasificación de riesgo**: por edad materna, antecedentes y presión arterial del último control.
+
+## Requisitos
+
+- Node.js 20.9+ (probado en 22.18)
+- pnpm
+
+## Comandos
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install      # instalar dependencias
+pnpm dev          # desarrollo en http://localhost:3000
+pnpm build        # exportación estática a out/
+pnpm preview      # servir out/ en http://localhost:4000 (servidor propio, sin dependencias)
+pnpm lint         # ESLint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+La app se exporta como sitio estático (`output: "export"`); el contenido de `out/` puede subirse a cualquier hosting estático. No requiere un runtime de Node en producción.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Seguridad de la cadena de suministro
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+El `.npmrc` aplica políticas de protección ("fendo"): `ignore-scripts`, `save-exact`, `minimum-release-age`, `block-exotic-subdeps`, `trust-policy=no-downgrade` y el **modelo de permisos de Node** (`node-options="--permission"`).
 
-## Learn More
+Por eso los scripts de `package.json` invocan `node` con los flags `--allow-*` mínimos que Next/ESLint necesitan (lectura/escritura de fs, procesos hijo, workers y addons nativos del compilador). Verás advertencias `SecurityWarning` al ejecutar: son esperadas y confirman que el modelo de permisos está activo.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Los build scripts de `sharp` y `unrs-resolver` se omiten (reconocido en `pnpm-workspace.yaml`); no se necesitan porque el export estático usa `images.unoptimized`.
