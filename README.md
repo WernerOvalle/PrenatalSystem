@@ -31,6 +31,8 @@ La app se exporta como sitio estático (`output: "export"`); el contenido de `ou
 
 El `.npmrc` aplica políticas de protección ("fendo"): `ignore-scripts`, `save-exact`, `minimum-release-age`, `block-exotic-subdeps`, `trust-policy=no-downgrade` y el **modelo de permisos de Node** (`node-options="--permission"`).
 
-Por eso los scripts de `package.json` invocan `node` con los flags `--allow-*` mínimos que Next/ESLint necesitan (lectura/escritura de fs, procesos hijo, workers y addons nativos del compilador). Verás advertencias `SecurityWarning` al ejecutar: son esperadas y confirman que el modelo de permisos está activo.
+Por eso los scripts `dev`, `lint` y `preview` invocan `node` con los flags `--allow-*` mínimos que Next/ESLint necesitan (lectura/escritura de fs, procesos hijo, workers y addons nativos). Verás advertencias `SecurityWarning` al ejecutarlos: son esperadas y confirman que el modelo de permisos está activo en local.
+
+**El script `build` NO usa el modelo de permisos** y es intencional: el modelo de permisos de Node deshabilita la API `fsync` (sin flag para reactivarla), que el bundler de Next necesita al compilar — esto rompe el build en CI/Vercel con `ERR_ACCESS_DENIED`. No afecta la seguridad en producción: la salida es un export estático (`output: "export"`), sin runtime de Node que proteger. Las protecciones de cadena de suministro del `.npmrc` (instalación) siguen vigentes en el build.
 
 Los build scripts de `sharp` y `unrs-resolver` se omiten (reconocido en `pnpm-workspace.yaml`); no se necesitan porque el export estático usa `images.unoptimized`.

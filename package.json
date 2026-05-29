@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "node --permission --allow-fs-read=* --allow-fs-write=* --allow-child-process --allow-worker --allow-addons node_modules/next/dist/bin/next dev",
-    "build": "node --permission --allow-fs-read=* --allow-fs-write=* --allow-child-process --allow-worker --allow-addons node_modules/next/dist/bin/next build",
+    "build": "next build",
     "lint": "node --permission --allow-fs-read=* --allow-child-process --allow-addons node_modules/eslint/bin/eslint.js .",
     "preview": "node --permission --allow-fs-read=./out --allow-fs-read=./serve.mjs serve.mjs"
   },
