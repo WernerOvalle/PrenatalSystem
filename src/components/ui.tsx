@@ -3,7 +3,6 @@ import type {
   InputHTMLAttributes,
   ReactNode,
   SelectHTMLAttributes,
-  TextareaHTMLAttributes,
 } from "react";
 
 export function cn(...classes: Array<string | false | null | undefined>): string {
@@ -20,7 +19,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-slate-200/80 bg-white/80 shadow-sm shadow-slate-200/50 backdrop-blur",
+        "rounded-2xl border border-borde bg-superficie shadow-sm shadow-black/40",
         className,
       )}
     >
@@ -29,9 +28,44 @@ export function Card({
   );
 }
 
+export type VarianteBoton = "primary" | "secondary" | "ghost" | "danger";
+export type TamanoBoton = "sm" | "md" | "grande";
+
+const BOTON_BASE =
+  "inline-flex items-center justify-center rounded-xl font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-fondo disabled:cursor-not-allowed disabled:opacity-50";
+
+const BOTON_VARIANTES: Record<VarianteBoton, string> = {
+  primary:
+    "bg-ufm-600 text-white shadow-sm shadow-black/40 hover:bg-ufm-700 focus-visible:ring-ufm-400",
+  secondary:
+    "border border-borde bg-superficie-alta text-texto hover:border-ufm-700 hover:bg-borde/60 focus-visible:ring-ufm-400",
+  ghost: "text-texto-suave hover:bg-superficie-alta hover:text-texto focus-visible:ring-borde",
+  danger:
+    "border border-ufm-700 bg-ufm-700/20 text-ufm-300 hover:bg-ufm-700/35 focus-visible:ring-ufm-400",
+};
+
+const BOTON_TAMANOS: Record<TamanoBoton, string> = {
+  sm: "h-9 px-3 text-sm gap-1.5",
+  md: "h-11 px-5 text-sm gap-2",
+  /** Los dos botones grandes del prototipo (276×72 px). */
+  grande: "h-[72px] w-full px-6 text-base gap-3",
+};
+
+/**
+ * Clases del botón sin el elemento `<button>`, para dárselas a un `<Link>`.
+ * Un `<button>` dentro de un `<a>` es HTML inválido.
+ */
+export function claseBoton(
+  variant: VarianteBoton = "primary",
+  size: TamanoBoton = "md",
+  className?: string,
+): string {
+  return cn(BOTON_BASE, BOTON_VARIANTES[variant], BOTON_TAMANOS[size], className);
+}
+
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "primary" | "secondary" | "ghost" | "danger";
-  size?: "sm" | "md";
+  variant?: VarianteBoton;
+  size?: TamanoBoton;
 };
 
 export function Button({
@@ -41,57 +75,38 @@ export function Button({
   children,
   ...props
 }: ButtonProps) {
-  const variants: Record<string, string> = {
-    primary:
-      "bg-gradient-to-br from-rose-500 to-pink-600 text-white shadow-sm shadow-rose-300/50 hover:from-rose-500 hover:to-pink-700 focus-visible:ring-rose-400",
-    secondary:
-      "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 focus-visible:ring-slate-300",
-    ghost:
-      "text-slate-600 hover:bg-slate-100 focus-visible:ring-slate-300",
-    danger:
-      "border border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 focus-visible:ring-rose-300",
-  };
-  const sizes: Record<string, string> = {
-    sm: "h-9 px-3 text-sm gap-1.5",
-    md: "h-11 px-5 text-sm gap-2",
-  };
   return (
-    <button
-      className={cn(
-        "inline-flex items-center justify-center rounded-xl font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-        variants[variant],
-        sizes[size],
-        className,
-      )}
-      {...props}
-    >
+    <button className={claseBoton(variant, size, className)} {...props}>
       {children}
     </button>
   );
 }
 
+export type Tono = "gris" | "rojo" | "oro" | "azul" | "verde" | "cancelado";
+
+const TONOS: Record<Tono, string> = {
+  gris: "bg-superficie-alta text-texto-suave ring-borde",
+  rojo: "bg-ufm-rojo/20 text-ufm-300 ring-ufm-rojo/50",
+  oro: "bg-ufm-oro/15 text-ufm-oro ring-ufm-oro/40",
+  azul: "bg-ufm-azul/25 text-ufm-azul-claro ring-ufm-azul/60",
+  verde: "bg-ufm-verde/20 text-ufm-verde-claro ring-ufm-verde/50",
+  cancelado: "bg-superficie-alta text-texto-suave ring-ufm-700/70 line-through",
+};
+
 export function Badge({
   children,
-  tone = "slate",
+  tono = "gris",
   className,
 }: {
   children: ReactNode;
-  tone?: "slate" | "rose" | "emerald" | "amber" | "sky" | "violet";
+  tono?: Tono;
   className?: string;
 }) {
-  const tones: Record<string, string> = {
-    slate: "bg-slate-100 text-slate-700 ring-slate-200",
-    rose: "bg-rose-100 text-rose-700 ring-rose-200",
-    emerald: "bg-emerald-100 text-emerald-700 ring-emerald-200",
-    amber: "bg-amber-100 text-amber-800 ring-amber-200",
-    sky: "bg-sky-100 text-sky-700 ring-sky-200",
-    violet: "bg-violet-100 text-violet-700 ring-violet-200",
-  };
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset",
-        tones[tone],
+        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset",
+        TONOS[tono],
         className,
       )}
     >
@@ -117,25 +132,25 @@ export function Field({
 }) {
   return (
     <label className={cn("block", className)}>
-      <span className="mb-1.5 flex items-center gap-1 text-sm font-medium text-slate-700">
+      <span className="mb-1.5 flex items-center gap-1 text-sm font-medium text-texto">
         {label}
-        {required && <span className="text-rose-500">*</span>}
+        {required && <span className="text-ufm-400">*</span>}
       </span>
       {children}
       {error ? (
-        <span className="mt-1 block text-xs font-medium text-rose-600">{error}</span>
+        <span className="mt-1 block text-xs font-medium text-ufm-300">{error}</span>
       ) : hint ? (
-        <span className="mt-1 block text-xs text-slate-400">{hint}</span>
+        <span className="mt-1 block text-xs text-texto-suave">{hint}</span>
       ) : null}
     </label>
   );
 }
 
 const controlBase =
-  "w-full rounded-xl border bg-white px-3.5 text-sm text-slate-900 shadow-sm transition-colors placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-rose-300";
+  "w-full rounded-xl border bg-superficie-alta px-3.5 text-sm text-texto shadow-sm shadow-black/20 transition-colors placeholder:text-texto-suave/70 focus:outline-none focus:ring-2 focus:ring-ufm-400 focus:border-ufm-400";
 
-const borderIdle = "border-slate-200";
-const borderError = "border-rose-300";
+const borderIdle = "border-borde";
+const borderError = "border-ufm-600";
 
 export function Input({
   className,
@@ -166,7 +181,7 @@ export function Select({
       )}
       style={{
         backgroundImage:
-          "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")",
+          "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239aa7b4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")",
       }}
       {...props}
     >
@@ -175,67 +190,37 @@ export function Select({
   );
 }
 
-export function Textarea({
-  className,
-  ...props
-}: TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return (
-    <textarea
-      className={cn(controlBase, "min-h-[88px] resize-y py-2.5", borderIdle, className)}
-      {...props}
-    />
-  );
-}
-
-export function Checkbox({
-  label,
-  className,
-  ...props
-}: InputHTMLAttributes<HTMLInputElement> & { label: string }) {
-  return (
-    <label
-      className={cn(
-        "flex cursor-pointer items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-700 transition-colors hover:bg-slate-50 has-[:checked]:border-rose-300 has-[:checked]:bg-rose-50/70",
-        className,
-      )}
-    >
-      <input
-        type="checkbox"
-        className="h-4 w-4 rounded border-slate-300 text-rose-600 focus:ring-rose-400"
-        {...props}
-      />
-      {label}
-    </label>
-  );
-}
-
 export function Stat({
   icon,
   value,
   label,
-  tone = "rose",
+  tono = "rojo",
 }: {
   icon: ReactNode;
   value: ReactNode;
   label: string;
-  tone?: "rose" | "sky" | "emerald" | "amber" | "violet";
+  tono?: "rojo" | "oro" | "azul" | "gris";
 }) {
-  const tones: Record<string, string> = {
-    rose: "bg-rose-100 text-rose-600",
-    sky: "bg-sky-100 text-sky-600",
-    emerald: "bg-emerald-100 text-emerald-600",
-    amber: "bg-amber-100 text-amber-600",
-    violet: "bg-violet-100 text-violet-600",
+  const tonos: Record<string, string> = {
+    rojo: "bg-ufm-rojo/20 text-ufm-300",
+    oro: "bg-ufm-oro/15 text-ufm-oro",
+    azul: "bg-ufm-azul/25 text-ufm-azul-claro",
+    gris: "bg-superficie-alta text-texto-suave",
   };
   return (
     <Card className="p-5">
       <div className="flex items-center gap-4">
-        <div className={cn("flex h-12 w-12 items-center justify-center rounded-xl", tones[tone])}>
+        <div
+          className={cn(
+            "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl",
+            tonos[tono],
+          )}
+        >
           {icon}
         </div>
-        <div>
-          <div className="text-2xl font-semibold tracking-tight text-slate-900">{value}</div>
-          <div className="text-sm text-slate-500">{label}</div>
+        <div className="min-w-0">
+          <div className="text-2xl font-semibold tracking-tight text-texto">{value}</div>
+          <div className="truncate text-sm text-texto-suave">{label}</div>
         </div>
       </div>
     </Card>
@@ -254,12 +239,12 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/50 px-6 py-12 text-center">
-      <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-borde bg-superficie/50 px-6 py-12 text-center">
+      <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-superficie-alta text-texto-suave">
         {icon}
       </div>
-      <h3 className="text-base font-semibold text-slate-800">{title}</h3>
-      {description && <p className="mt-1 max-w-sm text-sm text-slate-500">{description}</p>}
+      <h3 className="text-base font-semibold text-texto">{title}</h3>
+      {description && <p className="mt-1 max-w-sm text-sm text-texto-suave">{description}</p>}
       {action && <div className="mt-5">{action}</div>}
     </div>
   );
@@ -280,24 +265,16 @@ export function PageHeader({
     <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-3">
         {icon && (
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 to-pink-600 text-white shadow-sm shadow-rose-300/50">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-ufm-600 text-white shadow-sm shadow-black/40">
             {icon}
           </div>
         )}
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">{title}</h1>
-          {subtitle && <p className="text-sm text-slate-500">{subtitle}</p>}
+          <h1 className="text-2xl font-semibold tracking-tight text-texto">{title}</h1>
+          {subtitle && <p className="text-sm text-texto-suave">{subtitle}</p>}
         </div>
       </div>
       {action}
     </div>
-  );
-}
-
-export function RiskBadge({ nivel }: { nivel: "bajo" | "alto" }) {
-  return nivel === "alto" ? (
-    <Badge tone="rose">Alto riesgo</Badge>
-  ) : (
-    <Badge tone="emerald">Bajo riesgo</Badge>
   );
 }

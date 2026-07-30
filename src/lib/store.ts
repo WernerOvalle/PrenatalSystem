@@ -1,38 +1,33 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import type { ControlPrenatal, Paciente } from "@/types";
+import type { Cita, EstadoCita } from "@/types";
 import { nuevoId } from "./id";
 
-const PACIENTES_KEY = "prenatal:pacientes";
-const CONTROLES_KEY = "prenatal:controles";
+const CITAS_KEY = "citas:v1";
 
-let pacientes: Paciente[] | null = null;
-let controles: ControlPrenatal[] | null = null;
+let citas: Cita[] | null = null;
 const listeners = new Set<() => void>();
 
-const EMPTY_PACIENTES: readonly Paciente[] = [];
-const EMPTY_CONTROLES: readonly ControlPrenatal[] = [];
+const EMPTY_CITAS: readonly Cita[] = [];
 
-function leer<T>(key: string): T[] {
+function leer(): Cita[] {
   if (typeof window === "undefined") return [];
   try {
-    const raw = window.localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as T[]) : [];
+    const raw = window.localStorage.getItem(CITAS_KEY);
+    return raw ? (JSON.parse(raw) as Cita[]) : [];
   } catch {
     return [];
   }
 }
 
 function asegurarCarga(): void {
-  if (pacientes === null) pacientes = leer<Paciente>(PACIENTES_KEY);
-  if (controles === null) controles = leer<ControlPrenatal>(CONTROLES_KEY);
+  if (citas === null) citas = leer();
 }
 
 function persistir(): void {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(PACIENTES_KEY, JSON.stringify(pacientes ?? []));
-  window.localStorage.setItem(CONTROLES_KEY, JSON.stringify(controles ?? []));
+  window.localStorage.setItem(CITAS_KEY, JSON.stringify(citas ?? []));
 }
 
 function emitir(): void {
@@ -46,89 +41,60 @@ function subscribe(listener: () => void): () => void {
 
 if (typeof window !== "undefined") {
   window.addEventListener("storage", (e) => {
-    if (e.key === PACIENTES_KEY || e.key === CONTROLES_KEY) {
-      pacientes = null;
-      controles = null;
+    if (e.key === CITAS_KEY) {
+      citas = null;
       emitir();
     }
   });
 }
 
-export function usePacientes(): Paciente[] {
+export function useCitas(): Cita[] {
   return useSyncExternalStore(
     subscribe,
     () => {
       asegurarCarga();
-      return pacientes as Paciente[];
+      return citas as Cita[];
     },
-    () => EMPTY_PACIENTES as Paciente[],
+    () => EMPTY_CITAS as Cita[],
   );
 }
 
-export function useControles(): ControlPrenatal[] {
-  return useSyncExternalStore(
-    subscribe,
-    () => {
-      asegurarCarga();
-      return controles as ControlPrenatal[];
-    },
-    () => EMPTY_CONTROLES as ControlPrenatal[],
-  );
-}
-
-export function crearPaciente(
-  datos: Omit<Paciente, "id" | "creadoEn">,
-): Paciente {
+export function crearCita(datos: Omit<Cita, "id" | "creadoEn" | "estado">): Cita {
   asegurarCarga();
-  const paciente: Paciente = {
+  const cita: Cita = {
     ...datos,
     id: nuevoId(),
+    estado: "pendiente",
     creadoEn: new Date().toISOString(),
   };
-  pacientes = [paciente, ...(pacientes as Paciente[])];
+  citas = [cita, ...(citas as Cita[])];
   persistir();
   emitir();
-  return paciente;
+  return cita;
 }
 
-export function actualizarPaciente(
-  id: string,
-  datos: Omit<Paciente, "id" | "creadoEn">,
-): void {
+/** Mueve la cita a otra fecha y deja registro de dónde venía. */
+export function reprogramarCita(id: string, nuevaFecha: string): void {
   asegurarCarga();
-  pacientes = (pacientes as Paciente[]).map((p) =>
-    p.id === id ? { ...p, ...datos } : p,
+  citas = (citas as Cita[]).map((c) =>
+    c.id === id
+      ? { ...c, fecha: nuevaFecha, fechaAnterior: c.fecha, estado: "pendiente" as EstadoCita }
+      : c,
   );
   persistir();
   emitir();
 }
 
-export function eliminarPaciente(id: string): void {
+export function cambiarEstadoCita(id: string, estado: EstadoCita): void {
   asegurarCarga();
-  pacientes = (pacientes as Paciente[]).filter((p) => p.id !== id);
-  controles = (controles as ControlPrenatal[]).filter((c) => c.pacienteId !== id);
+  citas = (citas as Cita[]).map((c) => (c.id === id ? { ...c, estado } : c));
   persistir();
   emitir();
 }
 
-export function crearControl(
-  datos: Omit<ControlPrenatal, "id" | "creadoEn">,
-): ControlPrenatal {
+export function eliminarCita(id: string): void {
   asegurarCarga();
-  const control: ControlPrenatal = {
-    ...datos,
-    id: nuevoId(),
-    creadoEn: new Date().toISOString(),
-  };
-  controles = [control, ...(controles as ControlPrenatal[])];
-  persistir();
-  emitir();
-  return control;
-}
-
-export function eliminarControl(id: string): void {
-  asegurarCarga();
-  controles = (controles as ControlPrenatal[]).filter((c) => c.id !== id);
+  citas = (citas as Cita[]).filter((c) => c.id !== id);
   persistir();
   emitir();
 }

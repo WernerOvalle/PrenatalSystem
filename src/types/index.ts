@@ -1,43 +1,20 @@
-export type NivelRiesgo = "bajo" | "alto";
+export type Categoria = "consulta-general" | "pediatria" | "prenatal";
 
-export interface Antecedentes {
-  hipertension: boolean;
-  diabetes: boolean;
-  cesareaPrevia: boolean;
-  gestaciones: number;
-  partos: number;
-  abortos: number;
-  embarazoMultiple: boolean;
-}
+export type EstadoCita = "pendiente" | "confirmado" | "no-contesto" | "cancelado";
 
-export interface Paciente {
+export interface Cita {
   id: string;
-  nombres: string;
-  apellidos: string;
-  documento: string;
-  fechaNacimiento: string;
-  telefono: string;
-  direccion: string;
-  grupoSanguineo: string;
-  fum: string;
-  tallaCm: number | null;
-  pesoPrevioKg: number | null;
-  antecedentes: Antecedentes;
-  creadoEn: string;
-}
-
-export interface ControlPrenatal {
-  id: string;
-  pacienteId: string;
+  nombrePaciente: string;
+  expediente: string;
+  /** "Número de paciente" del prototipo: teléfono del paciente. */
+  telefonoPaciente: string;
+  /** "Número familiar" del prototipo: teléfono de un familiar. */
+  telefonoFamiliar: string;
+  categoria: Categoria;
+  /** Fecha de la cita en formato ISO yyyy-mm-dd. */
   fecha: string;
-  pesoKg: number | null;
-  presionSistolica: number | null;
-  presionDiastolica: number | null;
-  alturaUterinaCm: number | null;
-  fcfLpm: number | null;
-  movimientosFetales: boolean;
-  edemas: boolean;
-  observaciones: string;
-  proximaCita: string;
+  estado: EstadoCita;
+  /** Fecha que tenía la cita antes de la última reprogramación. */
+  fechaAnterior?: string;
   creadoEn: string;
 }

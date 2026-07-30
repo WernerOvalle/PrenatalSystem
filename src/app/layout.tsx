@@ -1,10 +1,16 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
 
 export const metadata: Metadata = {
-  title: "Control Prenatal",
-  description: "Registro y control prenatal de gestantes",
+  title: "Sistema de Citas · UFM",
+  description:
+    "Agendamiento de citas de consulta general, pediatría y prenatal con confirmación telefónica",
+};
+
+export const viewport: Viewport = {
+  colorScheme: "dark",
+  themeColor: "#0d1117",
 };
 
 export default function RootLayout({
