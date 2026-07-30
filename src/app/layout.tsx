@@ -3,7 +3,7 @@ import "./globals.css";
 import { Nav } from "@/components/Nav";
 
 export const metadata: Metadata = {
-  title: "Sistema de Citas · UFM",
+  title: "Sistema de Citas · Centro de salud Bárbara",
   description:
     "Agendamiento de citas de consulta general, pediatría y prenatal con confirmación telefónica",
 };

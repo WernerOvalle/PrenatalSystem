@@ -109,7 +109,7 @@ function Bienvenida() {
             Sistema de Citas
           </h1>
           <p className="mt-1 text-sm text-texto-suave">
-            Universidad Francisco Marroquín · consulta general, pediatría y prenatal.
+            Centro de salud Bárbara · consulta general, pediatría y prenatal.
           </p>
           <p className="mt-3 text-sm text-texto-suave">
             Hoy es <span className="font-medium text-texto">{formatFechaLarga(hoy)}</span>.

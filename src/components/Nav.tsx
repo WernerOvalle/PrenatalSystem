@@ -48,7 +48,9 @@ export function Nav() {
             <span className="block text-[15px] font-semibold tracking-tight text-texto">
               Sistema de Citas
             </span>
-            <span className="block text-xs text-texto-suave">UFM</span>
+            <span className="block whitespace-nowrap text-xs text-texto-suave">
+              Centro de salud Bárbara
+            </span>
           </span>
         </Link>
 

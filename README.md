@@ -1,8 +1,8 @@
-# Sistema de Citas · UFM
+# Sistema de Citas · Centro de salud Bárbara
 
-Web app para **agendar citas** de una clínica con tres categorías: consulta general, pediatría y prenatal. Construida con Next.js 16 (App Router) y exportación estática. Toda la información se guarda en el navegador con **localStorage** — no hay backend ni base de datos.
+Web app para **agendar citas** del Centro de salud Bárbara, con tres categorías: consulta general, pediatría y prenatal. Construida con Next.js 16 (App Router) y exportación estática. Toda la información se guarda en el navegador con **localStorage** — no hay backend ni base de datos.
 
-Sigue el prototipo de `Proyecto super wow.pptx`, con la identidad visual de la Universidad Francisco Marroquín en tema oscuro.
+La interfaz sigue el prototipo funcional aprobado, con la identidad visual de la Universidad Francisco Marroquín en tema oscuro.
 
 ## Pantallas
 
