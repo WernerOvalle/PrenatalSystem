@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
 
 export const metadata: Metadata = {
@@ -18,11 +19,12 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="es" className="h-full antialiased">
-      <body className="min-h-full">
+      <body className="flex min-h-full flex-col">
         <Nav />
-        <main className="mx-auto w-full max-w-6xl px-4 pb-20 pt-8 sm:px-6">
+        <main className="mx-auto w-full max-w-6xl flex-1 px-4 pb-16 pt-8 sm:px-6">
           {children}
         </main>
+        <Footer />
       </body>
     </html>
   );
