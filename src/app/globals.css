@@ -60,3 +60,101 @@ body {
 ::selection {
   background: rgba(197, 42, 38, 0.4);
 }
+
+/*
+ * Impresión: los reportes se exportan a PDF con el propio diálogo del navegador
+ * ("Guardar como PDF"), sin añadir ninguna dependencia. El tema oscuro se apaga
+ * solo aquí — en pantalla la hoja sigue con la identidad UFM.
+ */
+@page {
+  size: letter portrait;
+  margin: 14mm;
+}
+
+@media print {
+  :root {
+    color-scheme: light;
+  }
+
+  body {
+    background: #fff !important;
+    background-image: none !important;
+    color: #000;
+  }
+
+  /*
+   * `body > header|footer` y no `header|footer` a secas: son el nav y el pie de
+   * la app, mientras que las hojas usan `div` para su propio encabezado.
+   */
+  body > header,
+  body > footer,
+  .no-imprimir {
+    display: none !important;
+  }
+
+  main {
+    max-width: none;
+    padding: 0;
+  }
+
+  .hoja,
+  .hoja * {
+    color: #000 !important;
+    border-color: #999 !important;
+  }
+
+  .hoja table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 4px;
+  }
+
+  .hoja th,
+  .hoja td {
+    border: 1px solid #999;
+    padding: 4px 6px;
+    font-size: 11px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .hoja th {
+    background: #eee !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    font-weight: 600;
+  }
+
+  .salto-pagina {
+    break-after: page;
+  }
+
+  .evitar-corte {
+    break-inside: avoid;
+  }
+
+  .hoja-pie {
+    /* El sello va al final de la última página, no repetido en cada una. */
+    break-inside: avoid;
+  }
+}
+
+/* En pantalla las tablas de las hojas también necesitan rejilla. */
+.hoja table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.hoja th,
+.hoja td {
+  border: 1px solid var(--color-borde);
+  padding: 6px 8px;
+  font-size: 13px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.hoja th {
+  font-weight: 600;
+  color: var(--color-texto-suave);
+}

@@ -199,12 +199,13 @@ export function Stat({
   icon: ReactNode;
   value: ReactNode;
   label: string;
-  tono?: "rojo" | "oro" | "azul" | "gris";
+  tono?: "rojo" | "oro" | "azul" | "verde" | "gris";
 }) {
   const tonos: Record<string, string> = {
     rojo: "bg-ufm-rojo/20 text-ufm-300",
     oro: "bg-ufm-oro/15 text-ufm-oro",
     azul: "bg-ufm-azul/25 text-ufm-azul-claro",
+    verde: "bg-ufm-verde/20 text-ufm-verde-claro",
     gris: "bg-superficie-alta text-texto-suave",
   };
   return (

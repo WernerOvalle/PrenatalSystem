@@ -55,6 +55,29 @@ export function formatFechaCorta(iso: string): string {
   return `${dia}/${mes}/${anio}`;
 }
 
+/**
+ * "08:30" → "8:30 AM". Guatemala usa reloj de 12 horas al hablar, pero el dato
+ * se guarda como "HH:mm" porque así ordena lexicográficamente.
+ */
+export function formatHora(hora?: string): string {
+  const m = /^(\d{1,2}):(\d{2})$/.exec(hora ?? "");
+  if (!m) return "—";
+  const h = Number(m[1]);
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return `${h12}:${m[2]} ${h < 12 ? "AM" : "PM"}`;
+}
+
+/** Hora actual "HH:mm", para prellenar el formulario de nuevo ingreso. */
+export function horaActual(): string {
+  const d = new Date();
+  return `${`${d.getHours()}`.padStart(2, "0")}:${`${d.getMinutes()}`.padStart(2, "0")}`;
+}
+
+/** Sello del pie de las hojas impresas: "05/08/26 · 2:41 PM". */
+export function selloDeImpresion(): string {
+  return `${formatFechaCorta(hoyISO())} · ${formatHora(horaActual())}`;
+}
+
 export function nombreMes(mes: number): string {
   return MESES[mes] ?? "";
 }

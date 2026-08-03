@@ -8,14 +8,30 @@ import type { Categoria, Cita } from "@/types";
 import {
   CATEGORIAS,
   esCategoria,
+  llegadosDeFecha,
   metaCategoria,
   nombresConocidos,
   totalesDeFecha,
   pendientesDeHoy,
 } from "@/lib/citas";
-import { formatFechaCorta, formatFechaLarga, hoyISO } from "@/lib/fecha";
+import {
+  formatFechaCorta,
+  formatFechaLarga,
+  formatHora,
+  horaActual,
+  hoyISO,
+} from "@/lib/fecha";
 import { crearCita, reprogramarCita, useCitas } from "@/lib/store";
-import { AlertTriangle, Bell, CalendarHeart, Check, ClipboardList, Plus } from "@/components/icons";
+import {
+  AlertTriangle,
+  Bell,
+  CalendarHeart,
+  Check,
+  ClipboardList,
+  DoorOpen,
+  Plus,
+  UserCheck,
+} from "@/components/icons";
 import { ICONO_CATEGORIA } from "@/components/iconos-dominio";
 import {
   Badge,
@@ -30,7 +46,9 @@ import {
   cn,
 } from "@/components/ui";
 
-type Accion = "nueva" | "reprogramar";
+type Accion = "nueva" | "reprogramar" | "ingreso";
+
+const ACCIONES: readonly Accion[] = ["nueva", "reprogramar", "ingreso"];
 
 export default function InicioPage() {
   return (
@@ -45,8 +63,9 @@ export default function InicioPage() {
 function Inicio() {
   const searchParams = useSearchParams();
   const accionParam = searchParams.get("accion");
-  const accion: Accion | null =
-    accionParam === "nueva" || accionParam === "reprogramar" ? accionParam : null;
+  const accion: Accion | null = ACCIONES.includes(accionParam as Accion)
+    ? (accionParam as Accion)
+    : null;
 
   return (
     <div className="grid gap-6 lg:grid-cols-[18rem_1fr]">
@@ -70,12 +89,22 @@ function Inicio() {
           <CalendarHeart width={20} height={20} />
           Reprogramar
         </Link>
+        <Link
+          href="/?accion=ingreso"
+          aria-current={accion === "ingreso" ? "page" : undefined}
+          className={claseBoton(accion === "ingreso" ? "primary" : "secondary", "grande")}
+        >
+          <DoorOpen width={20} height={20} />
+          Nuevo ingreso
+        </Link>
       </div>
 
       {accion === "nueva" ? (
         <FormNuevaCita />
       ) : accion === "reprogramar" ? (
         <FormReprogramar />
+      ) : accion === "ingreso" ? (
+        <FormNuevoIngreso />
       ) : (
         <Bienvenida />
       )}
@@ -91,6 +120,7 @@ function Bienvenida() {
   const confirmadas = citas.filter(
     (c) => c.fecha === hoy && c.estado === "confirmado",
   ).length;
+  const llegaron = llegadosDeFecha(citas, hoy);
 
   return (
     <div className="flex flex-col gap-6">
@@ -109,7 +139,7 @@ function Bienvenida() {
             Sistema de Citas
           </h1>
           <p className="mt-1 text-sm text-texto-suave">
-            Centro de salud Bárbara · consulta general, pediatría y prenatal.
+            Centro de salud Bárbara · consulta general, pediatría, prenatal y oftalmología.
           </p>
           <p className="mt-3 text-sm text-texto-suave">
             Hoy es <span className="font-medium text-texto">{formatFechaLarga(hoy)}</span>.
@@ -118,9 +148,17 @@ function Bienvenida() {
       </Card>
 
       <div>
-        <h2 className="mb-3 text-sm font-semibold tracking-wide text-texto-suave uppercase">
-          Citas de hoy
-        </h2>
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <h2 className="text-sm font-semibold tracking-wide text-texto-suave uppercase">
+            Citas de hoy
+          </h2>
+          <Link
+            href={`/reportes/?fecha=${hoy}&doc=resumen`}
+            className="text-sm text-texto-suave transition-colors hover:text-ufm-300"
+          >
+            Ver reporte del día →
+          </Link>
+        </div>
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           <Stat
             icon={<ClipboardList width={22} height={22} />}
@@ -141,15 +179,15 @@ function Bienvenida() {
             tono="oro"
           />
           <Stat
-            icon={<CalendarHeart width={22} height={22} />}
-            value={porCategoria.prenatal}
-            label="Prenatal"
-            tono="azul"
+            icon={<UserCheck width={22} height={22} />}
+            value={llegaron}
+            label="Llegaron"
+            tono="verde"
           />
         </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {CATEGORIAS.map((c) => {
           const Icono = ICONO_CATEGORIA[c.slug];
           return (
@@ -178,6 +216,7 @@ function FormNuevaCita() {
   const [nombrePaciente, setNombre] = useState("");
   const [expediente, setExpediente] = useState("");
   const [fecha, setFecha] = useState(searchParams.get("fecha") ?? hoyISO());
+  const [hora, setHora] = useState("");
   const [telefonoPaciente, setTelPaciente] = useState("");
   const [telefonoFamiliar, setTelFamiliar] = useState("");
   const [categoria, setCategoria] = useState<Categoria | "">(
@@ -192,6 +231,7 @@ function FormNuevaCita() {
     const nuevos: Record<string, string> = {};
     if (!nombrePaciente.trim()) nuevos.nombrePaciente = "Escribe el nombre del paciente.";
     if (!fecha) nuevos.fecha = "Elige la fecha de la cita.";
+    if (!hora) nuevos.hora = "Elige la hora de la cita.";
     if (!categoria) nuevos.categoria = "Elige una categoría.";
     setErrores(nuevos);
     if (Object.keys(nuevos).length > 0) return;
@@ -203,6 +243,7 @@ function FormNuevaCita() {
       telefonoFamiliar: telefonoFamiliar.trim(),
       categoria: categoria as Categoria,
       fecha,
+      hora,
     });
     router.push(`/agenda/?fecha=${fecha}&cat=${categoria}`);
   }
@@ -229,14 +270,15 @@ function FormNuevaCita() {
           </datalist>
         </Field>
 
+        <Field label="# Expediente">
+          <Input
+            value={expediente}
+            onChange={(e) => setExpediente(e.target.value)}
+            placeholder="Ej. 2026-0184"
+          />
+        </Field>
+
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="# Expediente">
-            <Input
-              value={expediente}
-              onChange={(e) => setExpediente(e.target.value)}
-              placeholder="Ej. 2026-0184"
-            />
-          </Field>
           <Field
             label="Fecha de la cita"
             required
@@ -248,6 +290,19 @@ function FormNuevaCita() {
               value={fecha}
               onChange={(e) => setFecha(e.target.value)}
               invalid={Boolean(errores.fecha)}
+            />
+          </Field>
+          <Field
+            label="Hora de la cita"
+            required
+            hint={hora ? formatHora(hora) : undefined}
+            error={errores.hora}
+          >
+            <Input
+              type="time"
+              value={hora}
+              onChange={(e) => setHora(e.target.value)}
+              invalid={Boolean(errores.hora)}
             />
           </Field>
         </div>
@@ -310,6 +365,7 @@ function FormReprogramar() {
   const [expediente, setExpediente] = useState("");
   const [categoria, setCategoria] = useState<Categoria | "">("");
   const [nuevaFecha, setNuevaFecha] = useState("");
+  const [nuevaHora, setNuevaHora] = useState("");
   const [error, setError] = useState("");
 
   const nombres = useMemo(() => nombresConocidos(citas), [citas]);
@@ -339,8 +395,12 @@ function FormReprogramar() {
       setError("Elige la nueva fecha.");
       return;
     }
+    if (!nuevaHora) {
+      setError("Elige la nueva hora.");
+      return;
+    }
     setError("");
-    reprogramarCita(cita.id, nuevaFecha);
+    reprogramarCita(cita.id, nuevaFecha, nuevaHora);
     router.push(`/agenda/?fecha=${nuevaFecha}&cat=${cita.categoria}`);
   }
 
@@ -368,14 +428,15 @@ function FormReprogramar() {
           </datalist>
         </Field>
 
+        <Field label="# Expediente">
+          <Input
+            value={expediente}
+            onChange={(e) => setExpediente(e.target.value)}
+            placeholder="Ej. 2026-0184"
+          />
+        </Field>
+
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="# Expediente">
-            <Input
-              value={expediente}
-              onChange={(e) => setExpediente(e.target.value)}
-              placeholder="Ej. 2026-0184"
-            />
-          </Field>
           <Field
             label="Nueva fecha"
             required
@@ -385,6 +446,17 @@ function FormReprogramar() {
               type="date"
               value={nuevaFecha}
               onChange={(e) => setNuevaFecha(e.target.value)}
+            />
+          </Field>
+          <Field
+            label="Nueva hora"
+            required
+            hint={nuevaHora ? formatHora(nuevaHora) : undefined}
+          >
+            <Input
+              type="time"
+              value={nuevaHora}
+              onChange={(e) => setNuevaHora(e.target.value)}
             />
           </Field>
         </div>
@@ -446,6 +518,144 @@ function FormReprogramar() {
   );
 }
 
+/**
+ * Punto 5 del pedido: el paciente que llega sin cita previa. Se registra sobre
+ * la fecha de hoy y nace ya marcado como presente (lo hace `crearCita` a partir
+ * del origen), porque llegar es justamente el motivo de anotarlo.
+ */
+function FormNuevoIngreso() {
+  const router = useRouter();
+  const citas = useCitas();
+  const hoy = hoyISO();
+
+  const [nombrePaciente, setNombre] = useState("");
+  const [expediente, setExpediente] = useState("");
+  const [hora, setHora] = useState(horaActual);
+  const [telefonoPaciente, setTelPaciente] = useState("");
+  const [telefonoFamiliar, setTelFamiliar] = useState("");
+  const [categoria, setCategoria] = useState<Categoria | "">("");
+  const [errores, setErrores] = useState<Record<string, string>>({});
+
+  const nombres = useMemo(() => nombresConocidos(citas), [citas]);
+
+  function enviar(e: React.FormEvent) {
+    e.preventDefault();
+    const nuevos: Record<string, string> = {};
+    if (!nombrePaciente.trim()) nuevos.nombrePaciente = "Escribe el nombre del paciente.";
+    if (!hora) nuevos.hora = "Anota la hora en que llegó.";
+    if (!categoria) nuevos.categoria = "Elige una categoría.";
+    setErrores(nuevos);
+    if (Object.keys(nuevos).length > 0) return;
+
+    crearCita({
+      nombrePaciente: nombrePaciente.trim(),
+      expediente: expediente.trim(),
+      telefonoPaciente: telefonoPaciente.trim(),
+      telefonoFamiliar: telefonoFamiliar.trim(),
+      categoria: categoria as Categoria,
+      fecha: hoy,
+      hora,
+      origen: "nuevo-ingreso",
+    });
+    router.push(`/agenda/?fecha=${hoy}`);
+  }
+
+  return (
+    <Card className="p-5 sm:p-6">
+      <h2 className="mb-1 text-lg font-semibold tracking-tight text-texto">Nuevo ingreso</h2>
+      <p className="mb-5 text-sm text-texto-suave">
+        Paciente que llegó sin cita previa. Queda registrado el{" "}
+        <span className="font-medium text-texto">{formatFechaLarga(hoy)}</span> y ya se cuenta
+        como presente.
+      </p>
+
+      <form onSubmit={enviar} className="grid gap-4" noValidate>
+        <Field label="Nombre paciente" required error={errores.nombrePaciente}>
+          <Input
+            value={nombrePaciente}
+            onChange={(e) => setNombre(e.target.value)}
+            list="nombres-conocidos-ingreso"
+            autoComplete="off"
+            placeholder="Nombre y apellidos"
+            invalid={Boolean(errores.nombrePaciente)}
+          />
+          <datalist id="nombres-conocidos-ingreso">
+            {nombres.map((n) => (
+              <option key={n} value={n} />
+            ))}
+          </datalist>
+        </Field>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="# Expediente">
+            <Input
+              value={expediente}
+              onChange={(e) => setExpediente(e.target.value)}
+              placeholder="Ej. 2026-0184"
+            />
+          </Field>
+          <Field
+            label="Hora de llegada"
+            required
+            hint={hora ? formatHora(hora) : undefined}
+            error={errores.hora}
+          >
+            <Input
+              type="time"
+              value={hora}
+              onChange={(e) => setHora(e.target.value)}
+              invalid={Boolean(errores.hora)}
+            />
+          </Field>
+        </div>
+
+        <Field label="Número de paciente" hint="Teléfono de contacto.">
+          <Input
+            type="tel"
+            value={telefonoPaciente}
+            onChange={(e) => setTelPaciente(e.target.value)}
+            placeholder="0000 0000"
+          />
+        </Field>
+
+        <Field label="Número familiar" hint="Teléfono alterno de un familiar.">
+          <Input
+            type="tel"
+            value={telefonoFamiliar}
+            onChange={(e) => setTelFamiliar(e.target.value)}
+            placeholder="0000 0000"
+          />
+        </Field>
+
+        <Field label="Categoría" required error={errores.categoria}>
+          <Select
+            value={categoria}
+            onChange={(e) => setCategoria(e.target.value as Categoria | "")}
+            invalid={Boolean(errores.categoria)}
+          >
+            <option value="">Selecciona una categoría</option>
+            {CATEGORIAS.map((c) => (
+              <option key={c.slug} value={c.slug}>
+                {c.label}
+              </option>
+            ))}
+          </Select>
+        </Field>
+
+        <div className="flex justify-end gap-2 pt-1">
+          <Link href="/" className={claseBoton("ghost")}>
+            Cancelar
+          </Link>
+          <Button type="submit">
+            <DoorOpen width={18} height={18} />
+            Registrar ingreso
+          </Button>
+        </div>
+      </form>
+    </Card>
+  );
+}
+
 function OpcionCita({
   cita,
   activa,
@@ -475,7 +685,8 @@ function OpcionCita({
           {cita.nombrePaciente || "Sin nombre"}
         </span>
         <span className="block text-xs text-texto-suave">
-          {formatFechaCorta(cita.fecha)} · {meta.label}
+          {formatFechaCorta(cita.fecha)}
+          {cita.hora && ` · ${formatHora(cita.hora)}`} · {meta.label}
           {cita.expediente.trim() && ` · Exp. ${cita.expediente}`}
         </span>
       </span>

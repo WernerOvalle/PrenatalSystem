@@ -74,6 +74,16 @@ export function PregnantWoman(props: IconProps) {
   );
 }
 
+/** Categoría "Oftalmología". */
+export function Eye(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z" />
+      <circle cx="12" cy="12" r="3" />
+    </Base>
+  );
+}
+
 export function Bell(props: IconProps) {
   return (
     <Base {...props}>
@@ -118,6 +128,15 @@ export function X(props: IconProps) {
   );
 }
 
+/** El botón "sándwich" que abre el menú de navegación. */
+export function Menu(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M4 6h16M4 12h16M4 18h16" />
+    </Base>
+  );
+}
+
 export function Plus(props: IconProps) {
   return (
     <Base {...props}>
@@ -140,6 +159,62 @@ export function PhoneMissed(props: IconProps) {
     <Base {...props}>
       <path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7a2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67m-2.67-3.34a19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91" />
       <path d="m2 2 20 20" />
+    </Base>
+  );
+}
+
+/**
+ * Asistencia "Llegó". No se reusa `Check`: en la misma fila ya significa
+ * "confirmado por teléfono", que es otro eje.
+ */
+export function UserCheck(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M15 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="8.5" cy="7" r="4" />
+      <path d="m16 11 2 2 4-4" />
+    </Base>
+  );
+}
+
+/** Asistencia "No llegó". */
+export function UserX(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M15 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="8.5" cy="7" r="4" />
+      <path d="m17 9 5 5m0-5-5 5" />
+    </Base>
+  );
+}
+
+/** "Nuevo ingreso": el paciente que entra sin cita previa. */
+export function DoorOpen(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M13 4H6a1 1 0 0 0-1 1v15h8" />
+      <path d="M13 20V3.6a.6.6 0 0 1 .8-.6l4.6 1.5a1 1 0 0 1 .6.9V20" />
+      <path d="M3 20h18M16 12v.01" />
+    </Base>
+  );
+}
+
+export function Printer(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M6 9V3h12v6" />
+      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+      <rect x="6" y="14" width="12" height="8" rx="1" />
+    </Base>
+  );
+}
+
+/** Encabezado de la pantalla de reportes. */
+export function FileText(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+      <path d="M14 2v6h6M8 13h8M8 17h8M8 9h2" />
     </Base>
   );
 }

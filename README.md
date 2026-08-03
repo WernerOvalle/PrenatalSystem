@@ -1,35 +1,68 @@
 # Sistema de Citas · Centro de salud Bárbara
 
-Web app para **agendar citas** del Centro de salud Bárbara, con tres categorías: consulta general, pediatría y prenatal. Construida con Next.js 16 (App Router) y exportación estática. Toda la información se guarda en el navegador con **localStorage** — no hay backend ni base de datos.
+Web app para **agendar citas** del Centro de salud Bárbara, con cuatro categorías: consulta general, pediatría, prenatal y oftalmología. Construida con Next.js 16 (App Router) y exportación estática. Toda la información se guarda en el navegador con **localStorage** — no hay backend ni base de datos.
 
 La interfaz sigue el prototipo funcional aprobado, con la identidad visual de la Universidad Francisco Marroquín en tema oscuro.
 
 ## Pantallas
 
-- **Inicio**: los dos accesos del prototipo, `Generar nueva cita` y `Reprogramar`, más el resumen de las citas de hoy.
-- **Generar nueva cita**: nombre, # expediente, fecha, teléfono del paciente, teléfono de un familiar y categoría. El nombre autocompleta con los pacientes ya registrados.
-- **Reprogramar**: se busca la cita por nombre, expediente o categoría, se elige de la lista y se le asigna una nueva fecha. Queda registrada la fecha anterior.
+- **Inicio**: los tres accesos, `Generar nueva cita`, `Reprogramar` y `Nuevo ingreso`, más el resumen de las citas de hoy.
+- **Generar nueva cita**: nombre, # expediente, fecha, hora, teléfono del paciente, teléfono de un familiar y categoría. El nombre autocompleta con los pacientes ya registrados.
+- **Reprogramar**: se busca la cita por nombre, expediente o categoría, se elige de la lista y se le asigna nueva fecha y hora. Queda registrada la fecha anterior.
+- **Nuevo ingreso**: el paciente que llega sin cita previa. Se registra sobre la fecha de hoy con su hora de llegada y nace ya marcado como presente.
 - **Calendario** (una vista por categoría): rejilla mensual de domingo a sábado; cada día muestra cuántas citas tiene. Al elegir un día se abre su agenda.
-- **Agenda del día**: cada cita con sus dos teléfonos como enlaces para llamar, y el estado de la confirmación: `Pendiente`, `Confirmado`, `No contestó` o `Canceló`.
+- **Agenda del día**: ordenada por hora, con los dos teléfonos como enlaces para llamar y los dos ejes de cada cita (ver abajo).
 - **Todos pacientes**: totales de citas de la fecha elegida, con desglose por categoría.
+- **Reportes**: los dos documentos imprimibles del día (ver abajo).
 
 La campana del encabezado cuenta las citas de hoy que siguen sin confirmar.
 
+## Los dos ejes de una cita
+
+Confirmar por teléfono y presentarse a la consulta son hechos distintos, así que se
+registran por separado:
+
+- **Confirmación** (`estado`): `Pendiente`, `Confirmado`, `No contestó` o `Canceló`.
+- **Asistencia**: `Sin registrar`, `Llegó` o `No llegó`.
+
+El resumen de cierre del día es justamente el cruce de ambos.
+
+## Reportes imprimibles
+
+`/reportes` genera dos documentos para la fecha elegida:
+
+- **Lista por categoría**: los pacientes del día divididos por categoría, una por página,
+  con casillas para marcar la asistencia a mano.
+- **Resumen del día**: quién llegó y quién no, cruzado con la confirmación —
+  confirmados que llegaron, no confirmados que llegaron, confirmados que no llegaron,
+  no confirmados que no llegaron, los de nuevo ingreso, los que quedaron **sin registrar**
+  y las canceladas.
+
+El PDF se obtiene con el propio diálogo del navegador («Guardar como PDF»): el botón
+`Imprimir` llama a `window.print()` y el bloque `@media print` de `globals.css` cambia la
+hoja a papel blanco, esconde el nav y coloca los saltos de página. **No se añadió ninguna
+dependencia** para esto.
+
 ## Identidad visual
 
-Tema oscuro único. La paleta sale de los colores heráldicos del escudo de la UFM, muestreados del archivo original: rojo `#c52a26`, oro `#e3be31`, azul `#3e58a2` y verde `#458b57`. Los tokens están en un solo bloque `@theme` en `src/app/globals.css`.
+Tema oscuro único. La paleta sale de los colores heráldicos del escudo de la UFM, muestreados del archivo original: rojo `#c52a26`, oro `#e3be31`, azul `#3e58a2` y verde `#458b57`. Los tokens están en un solo bloque `@theme` en `src/app/globals.css`. Son cuatro tonos para cuatro categorías.
 
-Los estados de las citas nunca se distinguen solo por color: cada chip lleva texto e icono.
+Los estados de las citas nunca se distinguen solo por color: cada chip lleva texto e icono. Por eso el verde puede servir a la vez como tono de Oftalmología y de `Confirmado` sin crear ambigüedad.
+
+El tema oscuro se apaga únicamente al imprimir, para no gastar tinta.
 
 ## Estructura
 
 ```
-src/lib/fecha.ts     fechas y rejilla del calendario (sin dependencias)
-src/lib/citas.ts     categorías, estados y selectores puros
+src/lib/fecha.ts     fechas, horas y rejilla del calendario (sin dependencias)
+src/lib/citas.ts     categorías, estados, asistencia y selectores puros
 src/lib/store.ts     persistencia en localStorage + useSyncExternalStore
-src/components/      Nav, Calendario, CitaFila, iconos y primitivas de UI
-src/app/             Inicio, calendario/[categoria], agenda, totales
+src/components/      Nav, Calendario, CitaFila, Hoja*, iconos y primitivas de UI
+src/app/             Inicio, calendario/[categoria], agenda, totales, reportes
 ```
+
+Las citas guardadas antes de que existieran `asistencia` y `origen` se completan al leerlas
+en `store.ts`, así que los datos viejos del navegador siguen sirviendo sin migración.
 
 `src/lib/` es lógica pura sin React, así que se puede probar directamente con
 `node --experimental-strip-types`.

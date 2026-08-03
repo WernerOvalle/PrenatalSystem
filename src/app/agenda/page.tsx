@@ -7,7 +7,7 @@ import { CATEGORIAS, citasDeFecha, esCategoria, ordenarAgenda } from "@/lib/cita
 import { formatFechaLarga, hoyISO } from "@/lib/fecha";
 import { useCitas } from "@/lib/store";
 import { CitaFila } from "@/components/CitaFila";
-import { ArrowLeft, CalendarHeart, ClipboardList, Plus } from "@/components/icons";
+import { ArrowLeft, CalendarHeart, ClipboardList, Plus, Printer } from "@/components/icons";
 import { Card, EmptyState, Input, PageHeader, claseBoton, cn } from "@/components/ui";
 
 export default function AgendaPage() {
@@ -59,13 +59,19 @@ function Agenda() {
           metaCat ? metaCat.label : "todas las categorías"
         }`}
         action={
-          <Link
-            href={`/?accion=nueva&fecha=${fecha}${categoria ? `&cat=${categoria}` : ""}`}
-            className={claseBoton()}
-          >
-            <Plus width={18} height={18} />
-            Nueva cita
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            <Link href={`/reportes/?fecha=${fecha}&doc=lista`} className={claseBoton("secondary")}>
+              <Printer width={18} height={18} />
+              Imprimir
+            </Link>
+            <Link
+              href={`/?accion=nueva&fecha=${fecha}${categoria ? `&cat=${categoria}` : ""}`}
+              className={claseBoton()}
+            >
+              <Plus width={18} height={18} />
+              Nueva cita
+            </Link>
+          </div>
         }
       />
 

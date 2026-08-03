@@ -6,7 +6,7 @@ import { Suspense, useMemo } from "react";
 import { CATEGORIAS, totalesDeFecha } from "@/lib/citas";
 import { formatFechaLarga, hoyISO } from "@/lib/fecha";
 import { useCitas } from "@/lib/store";
-import { ChevronRight, Users } from "@/components/icons";
+import { ChevronRight, Printer, Users } from "@/components/icons";
 import { Card, Input, PageHeader, Stat, claseBoton } from "@/components/ui";
 
 export default function TotalesPage() {
@@ -28,18 +28,15 @@ function Totales() {
     [citas, fecha],
   );
 
-  /** Mismo orden que el prototipo: total, pediatría, consulta general, prenatal. */
+  /** El total primero y luego una fila por categoría, en el orden de `CATEGORIAS`. */
   const filas = [
     { label: "Total pacientes", valor: total, tono: "rojo" as const, href: `/agenda/?fecha=${fecha}` },
-    ...(["pediatria", "consulta-general", "prenatal"] as const).map((slug) => {
-      const meta = CATEGORIAS.find((c) => c.slug === slug)!;
-      return {
-        label: `Total ${meta.label.toLowerCase()}`,
-        valor: porCategoria[slug],
-        tono: meta.tono,
-        href: `/agenda/?fecha=${fecha}&cat=${slug}`,
-      };
-    }),
+    ...CATEGORIAS.map((meta) => ({
+      label: `Total ${meta.label.toLowerCase()}`,
+      valor: porCategoria[meta.slug],
+      tono: meta.tono,
+      href: `/agenda/?fecha=${fecha}&cat=${meta.slug}`,
+    })),
   ];
 
   return (
@@ -48,6 +45,12 @@ function Totales() {
         icon={<Users width={22} height={22} />}
         title="Todos pacientes"
         subtitle={`Citas agendadas el ${formatFechaLarga(fecha)}`}
+        action={
+          <Link href={`/reportes/?fecha=${fecha}&doc=lista`} className={claseBoton("secondary")}>
+            <Printer width={18} height={18} />
+            Imprimir lista
+          </Link>
+        }
       />
 
       <Card className="mb-6 p-4">
@@ -76,13 +79,16 @@ function Totales() {
         ))}
       </div>
 
-      <Link
-        href={`/agenda/?fecha=${fecha}`}
-        className={claseBoton("secondary", "md", "mt-6")}
-      >
-        Ver la agenda del día
-        <ChevronRight width={18} height={18} />
-      </Link>
+      <div className="mt-6 flex flex-wrap gap-2">
+        <Link href={`/agenda/?fecha=${fecha}`} className={claseBoton("secondary")}>
+          Ver la agenda del día
+          <ChevronRight width={18} height={18} />
+        </Link>
+        <Link href={`/reportes/?fecha=${fecha}&doc=resumen`} className={claseBoton("secondary")}>
+          Resumen del día
+          <ChevronRight width={18} height={18} />
+        </Link>
+      </div>
     </div>
   );
 }
