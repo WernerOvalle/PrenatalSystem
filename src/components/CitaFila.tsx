@@ -36,11 +36,11 @@ function Telefono({ label, numero }: { label: string; numero: string }) {
   return (
     <a
       href={`tel:${numero.replace(/\s+/g, "")}`}
-      className="inline-flex items-center gap-1.5 text-xs text-texto-suave transition-colors hover:text-ufm-300"
+      className="flex min-w-0 items-center gap-1.5 text-xs text-texto-suave transition-colors hover:text-ufm-300"
     >
       <Phone width={12} height={12} className="shrink-0" />
-      <span className="font-medium text-texto">{numero}</span>
-      <span>· {label}</span>
+      <span className="truncate font-medium text-texto">{numero}</span>
+      <span className="shrink-0">· {label}</span>
     </a>
   );
 }
@@ -57,8 +57,8 @@ export function CitaFila({ cita }: { cita: Cita }) {
 
   return (
     <Card className="p-3 sm:p-4">
-      <div className="flex flex-col gap-3 xl:flex-row xl:items-center">
-        <div className="flex min-w-0 flex-1 items-center gap-3">
+      <div className="flex flex-col gap-3 xl:flex-row xl:flex-wrap xl:items-center">
+        <div className="flex min-w-0 items-center gap-3 xl:shrink-0 xl:grow xl:basis-[22rem]">
           <span
             className={cn(
               "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl",
@@ -72,9 +72,9 @@ export function CitaFila({ cita }: { cita: Cita }) {
           <span className="w-20 shrink-0 text-sm font-semibold tabular-nums text-texto">
             {formatHora(cita.hora)}
           </span>
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="truncate font-medium text-texto">
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+              <span className="max-w-full truncate font-medium text-texto">
                 {cita.nombrePaciente || "Sin nombre"}
               </span>
               {sinCitaPrevia && (
@@ -83,18 +83,18 @@ export function CitaFila({ cita }: { cita: Cita }) {
                 </Badge>
               )}
             </div>
-            <div className="text-xs text-texto-suave">
+            <div className="truncate text-xs text-texto-suave">
               Expediente {cita.expediente.trim() || "—"}
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col gap-1 xl:w-52">
+        <div className="flex min-w-0 flex-col gap-1 xl:w-52 xl:shrink-0">
           <Telefono label="Paciente" numero={cita.telefonoPaciente} />
           <Telefono label="Familiar" numero={cita.telefonoFamiliar} />
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 xl:justify-end">
+        <div className="flex min-w-0 flex-wrap items-center gap-2 xl:grow xl:justify-end">
           <div className="flex flex-wrap items-center gap-1.5">
             <Badge tono={estado.tono}>
               <IconoEstado width={12} height={12} />
