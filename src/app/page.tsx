@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useMemo, useState } from "react";
@@ -29,6 +28,7 @@ import {
   Check,
   ClipboardList,
   DoorOpen,
+  LogoDemo,
   Plus,
   UserCheck,
 } from "@/components/icons";
@@ -125,21 +125,13 @@ function Bienvenida() {
   return (
     <div className="flex flex-col gap-6">
       <Card className="flex flex-col items-center gap-4 p-6 text-center sm:flex-row sm:text-left">
-        <span className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-white ring-1 ring-borde">
-          <Image
-            src="/escudo-ufm.png"
-            alt="Escudo de la Universidad Francisco Marroquín"
-            width={56}
-            height={71}
-            priority
-          />
-        </span>
+        <LogoDemo width={80} height={80} className="shrink-0" titulo="Logo de MediAgenda" />
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-texto">
-            Sistema de Citas
+            MediAgenda
           </h1>
           <p className="mt-1 text-sm text-texto-suave">
-            Centro de salud Bárbara · consulta general, pediatría, prenatal y oftalmología.
+            Clínica demo · consulta general, pediatría, prenatal y oftalmología.
           </p>
           <p className="mt-3 text-sm text-texto-suave">
             Hoy es <span className="font-medium text-texto">{formatFechaLarga(hoy)}</span>.
@@ -154,7 +146,7 @@ function Bienvenida() {
           </h2>
           <Link
             href={`/reportes/?fecha=${hoy}&doc=resumen`}
-            className="text-sm text-texto-suave transition-colors hover:text-ufm-300"
+            className="text-sm text-texto-suave transition-colors hover:text-marca-300"
           >
             Ver reporte del día →
           </Link>
@@ -192,7 +184,7 @@ function Bienvenida() {
           const Icono = ICONO_CATEGORIA[c.slug];
           return (
             <Link key={c.slug} href={`/calendario/${c.slug}/`}>
-              <Card className="flex items-center gap-3 p-4 transition-colors hover:border-ufm-700">
+              <Card className="flex items-center gap-3 p-4 transition-colors hover:border-marca-700">
                 <Icono width={20} height={20} className="shrink-0 text-texto-suave" />
                 <span className="text-sm font-medium text-texto">{c.label}</span>
                 <Badge tono={c.tono} className="ml-auto">
@@ -477,7 +469,7 @@ function FormReprogramar() {
 
         <div>
           <span className="mb-2 block text-sm font-medium text-texto">
-            Cita a reprogramar <span className="text-ufm-400">*</span>
+            Cita a reprogramar <span className="text-marca-400">*</span>
           </span>
           {coincidencias.length === 0 ? (
             <EmptyState
@@ -501,7 +493,7 @@ function FormReprogramar() {
               ))}
             </ul>
           )}
-          {error && <p className="mt-2 text-xs font-medium text-ufm-300">{error}</p>}
+          {error && <p className="mt-2 text-xs font-medium text-marca-300">{error}</p>}
         </div>
 
         <div className="flex justify-end gap-2 pt-1">
@@ -675,8 +667,8 @@ function OpcionCita({
       className={cn(
         "flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors",
         activa
-          ? "border-ufm-600 bg-ufm-rojo/15"
-          : "border-borde bg-superficie-alta hover:border-ufm-700",
+          ? "border-marca-600 bg-marca-rojo/15"
+          : "border-borde bg-superficie-alta hover:border-marca-700",
       )}
     >
       <Icono width={18} height={18} className="shrink-0 text-texto-suave" />
@@ -690,7 +682,7 @@ function OpcionCita({
           {cita.expediente.trim() && ` · Exp. ${cita.expediente}`}
         </span>
       </span>
-      {activa && <Check width={16} height={16} className="shrink-0 text-ufm-300" />}
+      {activa && <Check width={16} height={16} className="shrink-0 text-marca-300" />}
     </button>
   );
 }

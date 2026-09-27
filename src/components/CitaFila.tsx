@@ -12,17 +12,17 @@ import { Badge, Button, Card, claseBoton, cn } from "./ui";
 
 /** Fondo del botón de estado o de asistencia cuando ese valor es el activo. */
 const ACTIVO: Record<string, string> = {
-  verde: "bg-ufm-verde/25 text-ufm-verde-claro",
-  oro: "bg-ufm-oro/20 text-ufm-oro",
-  rojo: "bg-ufm-rojo/20 text-ufm-300",
-  cancelado: "bg-ufm-700/30 text-ufm-300",
+  verde: "bg-marca-verde/25 text-marca-verde-claro",
+  oro: "bg-marca-oro/20 text-marca-oro",
+  rojo: "bg-marca-rojo/20 text-marca-300",
+  cancelado: "bg-marca-700/30 text-marca-300",
 };
 
 const TONO_CATEGORIA: Record<string, string> = {
-  azul: "bg-ufm-azul/25 text-ufm-azul-claro",
-  oro: "bg-ufm-oro/15 text-ufm-oro",
-  rojo: "bg-ufm-rojo/20 text-ufm-300",
-  verde: "bg-ufm-verde/20 text-ufm-verde-claro",
+  azul: "bg-marca-azul/25 text-marca-azul-claro",
+  oro: "bg-marca-oro/15 text-marca-oro",
+  rojo: "bg-marca-rojo/20 text-marca-300",
+  verde: "bg-marca-verde/20 text-marca-verde-claro",
 };
 
 function Telefono({ label, numero }: { label: string; numero: string }) {
@@ -36,7 +36,7 @@ function Telefono({ label, numero }: { label: string; numero: string }) {
   return (
     <a
       href={`tel:${numero.replace(/\s+/g, "")}`}
-      className="flex min-w-0 items-center gap-1.5 text-xs text-texto-suave transition-colors hover:text-ufm-300"
+      className="flex min-w-0 items-center gap-1.5 text-xs text-texto-suave transition-colors hover:text-marca-300"
     >
       <Phone width={12} height={12} className="shrink-0" />
       <span className="truncate font-medium text-texto">{numero}</span>

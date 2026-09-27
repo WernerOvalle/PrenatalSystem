@@ -18,7 +18,7 @@ export const DIAS_SEMANA = ["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"] as 
 
 /**
  * Interpreta un ISO yyyy-mm-dd como fecha local, no UTC. Sin la hora explícita,
- * `new Date("2026-08-05")` se parsea como medianoche UTC y en Guatemala (UTC−6)
+ * `new Date("2026-08-05")` se parsea como medianoche UTC y en una zona como UTC−6
  * termina cayendo el día anterior.
  */
 export function parseFecha(iso: string): Date | null {
@@ -56,7 +56,7 @@ export function formatFechaCorta(iso: string): string {
 }
 
 /**
- * "08:30" → "8:30 AM". Guatemala usa reloj de 12 horas al hablar, pero el dato
+ * "08:30" → "8:30 AM". En pantalla se usa reloj de 12 horas, pero el dato
  * se guarda como "HH:mm" porque así ordena lexicográficamente.
  */
 export function formatHora(hora?: string): string {

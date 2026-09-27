@@ -4,25 +4,25 @@
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
 
-  /* Colores del escudo de la UFM, muestreados del archivo original. */
-  --color-ufm-rojo: #c52a26;
-  --color-ufm-oro: #e3be31;
-  --color-ufm-azul: #3e58a2;
-  --color-ufm-verde: #458b57;
+  /* Paleta de marca de la demo: un tono por categoría de cita. */
+  --color-marca-rojo: #c93a41;
+  --color-marca-oro: #f5a524;
+  --color-marca-azul: #5b6ee1;
+  --color-marca-verde: #2fa37a;
 
   /*
-   * Rampa del rojo institucional. El #c52a26 del escudo funciona como relleno
-   * con texto blanco encima, pero no tiene contraste suficiente como texto
-   * sobre fondo oscuro: para eso están el 300 y el 400.
+   * Rampa del coral principal. El #c93a41 funciona como relleno con texto
+   * blanco encima, pero no tiene contraste suficiente como texto sobre fondo
+   * oscuro: para eso están el 300 y el 400.
    */
-  --color-ufm-300: #f4938b;
-  --color-ufm-400: #ef6b62;
-  --color-ufm-600: #c52a26;
-  --color-ufm-700: #9e2020;
+  --color-marca-300: #f7a1a4;
+  --color-marca-400: #f07378;
+  --color-marca-600: #c93a41;
+  --color-marca-700: #a12d33;
 
   /* Variantes claras del azul y el verde, por el mismo motivo de contraste. */
-  --color-ufm-azul-claro: #9db0e8;
-  --color-ufm-verde-claro: #79c48f;
+  --color-marca-azul-claro: #aab6f2;
+  --color-marca-verde-claro: #7fd3b0;
 
   /* Superficies del tema oscuro. */
   --color-fondo: #0d1117;
@@ -52,19 +52,19 @@ body {
   color: var(--color-texto);
   background-color: var(--color-fondo);
   background-image:
-    radial-gradient(1100px 560px at 100% -10%, rgba(197, 42, 38, 0.16), transparent 60%),
-    radial-gradient(900px 520px at -10% 0%, rgba(62, 88, 162, 0.14), transparent 55%);
+    radial-gradient(1100px 560px at 100% -10%, rgba(201, 58, 65, 0.16), transparent 60%),
+    radial-gradient(900px 520px at -10% 0%, rgba(91, 110, 225, 0.14), transparent 55%);
   background-attachment: fixed;
 }
 
 ::selection {
-  background: rgba(197, 42, 38, 0.4);
+  background: rgba(201, 58, 65, 0.4);
 }
 
 /*
  * Impresión: los reportes se exportan a PDF con el propio diálogo del navegador
  * ("Guardar como PDF"), sin añadir ninguna dependencia. El tema oscuro se apaga
- * solo aquí — en pantalla la hoja sigue con la identidad UFM.
+ * solo aquí — en pantalla la hoja sigue con la paleta de marca.
  */
 @page {
   size: letter portrait;

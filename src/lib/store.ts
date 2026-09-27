@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import type { Asistencia, Cita, EstadoCita } from "@/types";
+import { generarDatosDemo } from "./demo";
 import { nuevoId } from "./id";
 
 const CITAS_KEY = "citas:v1";
@@ -24,11 +25,20 @@ function normalizar(cita: Cita): Cita {
   };
 }
 
+/**
+ * En la primera visita (la llave no existe) la demo arranca con los datos de
+ * ejemplo. Si la llave existe aunque sea `[]` —el usuario borró todo— se
+ * respeta vacía.
+ */
 function leer(): Cita[] {
   if (typeof window === "undefined") return [];
   try {
     const raw = window.localStorage.getItem(CITAS_KEY);
-    if (!raw) return [];
+    if (raw === null) {
+      const demo = generarDatosDemo();
+      window.localStorage.setItem(CITAS_KEY, JSON.stringify(demo));
+      return demo;
+    }
     return (JSON.parse(raw) as Cita[]).map(normalizar);
   } catch {
     return [];
@@ -135,6 +145,13 @@ export function cambiarAsistencia(id: string, asistencia: Asistencia): void {
 export function eliminarCita(id: string): void {
   asegurarCarga();
   citas = (citas as Cita[]).filter((c) => c.id !== id);
+  persistir();
+  emitir();
+}
+
+/** Descarta todo lo capturado y vuelve a los datos de ejemplo, con fechas de hoy. */
+export function restablecerDatosDemo(): void {
+  citas = generarDatosDemo();
   persistir();
   emitir();
 }

@@ -7,7 +7,7 @@ import type { Asistencia, Categoria, Cita, EstadoCita } from "@/types";
 export interface MetaCategoria {
   slug: Categoria;
   label: string;
-  /** Tono heráldico del escudo de la UFM. */
+  /** Tono de la paleta de marca (`--color-marca-*`). */
   tono: "azul" | "oro" | "rojo" | "verde";
 }
 
@@ -39,7 +39,7 @@ export interface MetaEstado {
 /**
  * Los estados no se distinguen solo por color: cada chip lleva texto e icono,
  * así siguen siendo legibles con daltonismo y no se confunden con los tonos
- * de categoría, que reusan la misma paleta del escudo.
+ * de categoría, que reusan la misma paleta de marca.
  */
 export const ESTADOS: readonly MetaEstado[] = [
   { slug: "pendiente", label: "Pendiente", tono: "gris" },

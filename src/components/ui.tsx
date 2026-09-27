@@ -36,12 +36,12 @@ const BOTON_BASE =
 
 const BOTON_VARIANTES: Record<VarianteBoton, string> = {
   primary:
-    "bg-ufm-600 text-white shadow-sm shadow-black/40 hover:bg-ufm-700 focus-visible:ring-ufm-400",
+    "bg-marca-600 text-white shadow-sm shadow-black/40 hover:bg-marca-700 focus-visible:ring-marca-400",
   secondary:
-    "border border-borde bg-superficie-alta text-texto hover:border-ufm-700 hover:bg-borde/60 focus-visible:ring-ufm-400",
+    "border border-borde bg-superficie-alta text-texto hover:border-marca-700 hover:bg-borde/60 focus-visible:ring-marca-400",
   ghost: "text-texto-suave hover:bg-superficie-alta hover:text-texto focus-visible:ring-borde",
   danger:
-    "border border-ufm-700 bg-ufm-700/20 text-ufm-300 hover:bg-ufm-700/35 focus-visible:ring-ufm-400",
+    "border border-marca-700 bg-marca-700/20 text-marca-300 hover:bg-marca-700/35 focus-visible:ring-marca-400",
 };
 
 const BOTON_TAMANOS: Record<TamanoBoton, string> = {
@@ -86,11 +86,11 @@ export type Tono = "gris" | "rojo" | "oro" | "azul" | "verde" | "cancelado";
 
 const TONOS: Record<Tono, string> = {
   gris: "bg-superficie-alta text-texto-suave ring-borde",
-  rojo: "bg-ufm-rojo/20 text-ufm-300 ring-ufm-rojo/50",
-  oro: "bg-ufm-oro/15 text-ufm-oro ring-ufm-oro/40",
-  azul: "bg-ufm-azul/25 text-ufm-azul-claro ring-ufm-azul/60",
-  verde: "bg-ufm-verde/20 text-ufm-verde-claro ring-ufm-verde/50",
-  cancelado: "bg-superficie-alta text-texto-suave ring-ufm-700/70 line-through",
+  rojo: "bg-marca-rojo/20 text-marca-300 ring-marca-rojo/50",
+  oro: "bg-marca-oro/15 text-marca-oro ring-marca-oro/40",
+  azul: "bg-marca-azul/25 text-marca-azul-claro ring-marca-azul/60",
+  verde: "bg-marca-verde/20 text-marca-verde-claro ring-marca-verde/50",
+  cancelado: "bg-superficie-alta text-texto-suave ring-marca-700/70 line-through",
 };
 
 export function Badge({
@@ -134,11 +134,11 @@ export function Field({
     <label className={cn("block", className)}>
       <span className="mb-1.5 flex items-center gap-1 text-sm font-medium text-texto">
         {label}
-        {required && <span className="text-ufm-400">*</span>}
+        {required && <span className="text-marca-400">*</span>}
       </span>
       {children}
       {error ? (
-        <span className="mt-1 block text-xs font-medium text-ufm-300">{error}</span>
+        <span className="mt-1 block text-xs font-medium text-marca-300">{error}</span>
       ) : hint ? (
         <span className="mt-1 block text-xs text-texto-suave">{hint}</span>
       ) : null}
@@ -147,10 +147,10 @@ export function Field({
 }
 
 const controlBase =
-  "w-full rounded-xl border bg-superficie-alta px-3.5 text-sm text-texto shadow-sm shadow-black/20 transition-colors placeholder:text-texto-suave/70 focus:outline-none focus:ring-2 focus:ring-ufm-400 focus:border-ufm-400";
+  "w-full rounded-xl border bg-superficie-alta px-3.5 text-sm text-texto shadow-sm shadow-black/20 transition-colors placeholder:text-texto-suave/70 focus:outline-none focus:ring-2 focus:ring-marca-400 focus:border-marca-400";
 
 const borderIdle = "border-borde";
-const borderError = "border-ufm-600";
+const borderError = "border-marca-600";
 
 export function Input({
   className,
@@ -202,10 +202,10 @@ export function Stat({
   tono?: "rojo" | "oro" | "azul" | "verde" | "gris";
 }) {
   const tonos: Record<string, string> = {
-    rojo: "bg-ufm-rojo/20 text-ufm-300",
-    oro: "bg-ufm-oro/15 text-ufm-oro",
-    azul: "bg-ufm-azul/25 text-ufm-azul-claro",
-    verde: "bg-ufm-verde/20 text-ufm-verde-claro",
+    rojo: "bg-marca-rojo/20 text-marca-300",
+    oro: "bg-marca-oro/15 text-marca-oro",
+    azul: "bg-marca-azul/25 text-marca-azul-claro",
+    verde: "bg-marca-verde/20 text-marca-verde-claro",
     gris: "bg-superficie-alta text-texto-suave",
   };
   return (
@@ -266,7 +266,7 @@ export function PageHeader({
     <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-3">
         {icon && (
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-ufm-600 text-white shadow-sm shadow-black/40">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-marca-600 text-white shadow-sm shadow-black/40">
             {icon}
           </div>
         )}

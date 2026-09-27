@@ -1,8 +1,16 @@
-# Sistema de Citas · Centro de salud Bárbara
+# MediAgenda Demo · Sistema de citas
 
-Web app para **agendar citas** del Centro de salud Bárbara, con cuatro categorías: consulta general, pediatría, prenatal y oftalmología. Construida con Next.js 16 (App Router) y exportación estática. Toda la información se guarda en el navegador con **localStorage** — no hay backend ni base de datos.
+> **Demo project — all data is fictional.** Clínica, pacientes, expedientes y teléfonos son inventados.
 
-La interfaz sigue el prototipo funcional aprobado, con la identidad visual de la Universidad Francisco Marroquín en tema oscuro.
+Web app de demostración para **agendar citas médicas** en cuatro categorías: consulta general, pediatría, prenatal y oftalmología. Construida con Next.js 16 (App Router) y exportación estática. Toda la información se guarda en el navegador con **localStorage** — no hay backend ni base de datos.
+
+Tema oscuro único, con una paleta de marca propia de la demo.
+
+## Datos de ejemplo y botón Restablecer
+
+La primera vez que se abre la app (sin datos en el navegador) se cargan unas 24 citas de ejemplo, con fechas relativas a hoy: días pasados con asistencia registrada, citas de hoy en todos los estados y citas de los próximos días. Salen de `src/lib/demo.ts`.
+
+La franja superior muestra el aviso de demo y el botón **Restablecer demo**. Con una confirmación en dos pasos, borra todo lo capturado y vuelve a cargar los datos de ejemplo, con fechas recalculadas al día de hoy. Si borras todas las citas a mano, la app respeta la lista vacía hasta que pulses Restablecer.
 
 ## Pantallas
 
@@ -45,7 +53,7 @@ dependencia** para esto.
 
 ## Identidad visual
 
-Tema oscuro único. La paleta sale de los colores heráldicos del escudo de la UFM, muestreados del archivo original: rojo `#c52a26`, oro `#e3be31`, azul `#3e58a2` y verde `#458b57`. Los tokens están en un solo bloque `@theme` en `src/app/globals.css`. Son cuatro tonos para cuatro categorías.
+Tema oscuro único. La paleta de marca de la demo tiene un tono por categoría: coral `#c93a41`, ámbar `#f5a524`, índigo `#5b6ee1` y teal `#2fa37a`. Los tokens `--color-marca-*` están en un solo bloque `@theme` en `src/app/globals.css`. El logo es un SVG inline (`LogoDemo` en `src/components/icons.tsx`), y el favicon, `src/app/icon.svg`, usa el mismo dibujo.
 
 Los estados de las citas nunca se distinguen solo por color: cada chip lleva texto e icono. Por eso el verde puede servir a la vez como tono de Oftalmología y de `Confirmado` sin crear ambigüedad.
 
@@ -57,7 +65,8 @@ El tema oscuro se apaga únicamente al imprimir, para no gastar tinta.
 src/lib/fecha.ts     fechas, horas y rejilla del calendario (sin dependencias)
 src/lib/citas.ts     categorías, estados, asistencia y selectores puros
 src/lib/store.ts     persistencia en localStorage + useSyncExternalStore
-src/components/      Nav, Calendario, CitaFila, Hoja*, iconos y primitivas de UI
+src/lib/demo.ts      datos de ejemplo (ficticios) y su generador
+src/components/      DemoBanner, Nav, Calendario, CitaFila, Hoja*, iconos y primitivas de UI
 src/app/             Inicio, calendario/[categoria], agenda, totales, reportes
 ```
 
@@ -80,15 +89,16 @@ pnpm dev          # desarrollo en http://localhost:3000
 pnpm build        # exportación estática a out/
 pnpm preview      # servir out/ en http://localhost:4000 (servidor propio, sin dependencias)
 pnpm lint         # ESLint
+pnpm run deploy   # build + subida a Azure Static Web Apps (ver DEPLOY.md)
 ```
 
 La app se exporta como sitio estático (`output: "export"`); el contenido de `out/` puede subirse a cualquier hosting estático. No requiere un runtime de Node en producción.
 
-Como no hay servidor, los parámetros de pantalla van por query string (`?fecha=`, `?cat=`, `?mes=`) y las tres vistas de calendario se generan con `generateStaticParams()`.
+Como no hay servidor, los parámetros de pantalla van por query string (`?fecha=`, `?cat=`, `?mes=`) y las cuatro vistas de calendario se generan con `generateStaticParams()`.
 
 ## Seguridad de la cadena de suministro
 
-El `.npmrc` aplica políticas de protección ("fendo"): `ignore-scripts`, `save-exact`, `minimum-release-age`, `block-exotic-subdeps`, `trust-policy=no-downgrade` y el **modelo de permisos de Node** (`node-options="--permission"`).
+Las políticas de protección ("fendo") son `ignore-scripts`, `save-exact`, `minimum-release-age` (7 días), `block-exotic-subdeps` y `trust-policy=no-downgrade`. Están en `.npmrc` y **duplicadas en `pnpm-workspace.yaml`**, porque pnpm 11 ya no lee esos ajustes de `.npmrc`. Compruébalo con `pnpm config list`. A eso se suma el **modelo de permisos de Node** en los scripts locales.
 
 Por eso los scripts `dev`, `lint` y `preview` invocan `node` con los flags `--allow-*` mínimos que Next/ESLint necesitan (lectura/escritura de fs, procesos hijo, workers y addons nativos). Verás advertencias `SecurityWarning` al ejecutarlos: son esperadas y confirman que el modelo de permisos está activo en local.
 

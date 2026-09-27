@@ -67,5 +67,5 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`\n  Control Prenatal — export estático servido en http://localhost:${PORT}\n`);
+  console.log(`\n  MediAgenda Demo — export estático servido en http://localhost:${PORT}\n`);
 });

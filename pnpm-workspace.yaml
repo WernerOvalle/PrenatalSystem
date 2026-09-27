@@ -1,3 +1,12 @@
+# Protección de cadena de suministro. Duplica el .npmrc de fendo porque pnpm 11
+# ya no lee estos ajustes de .npmrc (solo registro y auth): `pnpm config list`
+# no los mostraba. Aquí sí aplican, también a `pnpm dlx` del script deploy.
+ignoreScripts: true
+saveExact: true
+minimumReleaseAge: 10080
+blockExoticSubdeps: true
+trustPolicy: no-downgrade
+
 # Reconoce explícitamente las dependencias con build scripts.
 # Se ponen en false acorde a la política `ignore-scripts` del .npmrc de fendo:
 # no se ejecutan. No hacen falta — el export estático usa images.unoptimized
@@ -9,5 +18,15 @@ allowBuilds:
 # Fuerza la versión parcheada de postcss (Next 16 trae 8.4.31, vulnerable a
 # GHSA-qx2v-qp2m-jg93). Sube a la misma 8.5.x que ya usa Tailwind. Acorde a
 # trust-policy=no-downgrade: solo subimos versión, nunca bajamos.
+#
+# Las tres siguientes resuelven fallos de trustPolicy=no-downgrade: las
+# versiones que pedían las dependencias (semver 6.3.1, undici-types 6.21.0,
+# eslint-import-resolver-typescript 3.10.1) se publicaron con menos evidencia de
+# confianza que versiones anteriores. Se sube a la primera versión con trusted
+# publisher y más de 7 días de publicada. Todas son solo de desarrollo (ESLint
+# y tipos); ninguna llega al export estático.
 overrides:
   postcss@<8.5.10: ">=8.5.10"
+  undici-types@6: 6.28.1
+  semver@6: 7.8.5
+  eslint-import-resolver-typescript@3: 4.4.5

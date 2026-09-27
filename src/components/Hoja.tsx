@@ -1,5 +1,5 @@
-import Image from "next/image";
 import type { ReactNode } from "react";
+import { LogoDemo } from "./icons";
 import { formatFechaLarga, selloDeImpresion } from "@/lib/fecha";
 
 /**
@@ -25,17 +25,10 @@ export function Hoja({
   return (
     <article className="hoja rounded-2xl border border-borde bg-superficie p-6 shadow-sm shadow-black/40 print:rounded-none print:border-0 print:bg-transparent print:p-0 print:shadow-none">
       <div className="hoja-encabezado mb-6 flex items-center gap-4 border-b border-borde pb-4">
-        <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white ring-1 ring-borde print:ring-0">
-          <Image
-            src="/escudo-ufm.png"
-            alt="Escudo de la Universidad Francisco Marroquín"
-            width={38}
-            height={48}
-          />
-        </span>
+        <LogoDemo width={56} height={56} className="shrink-0" />
         <div className="min-w-0">
           <p className="text-xs font-medium tracking-wide text-texto-suave uppercase">
-            Centro de salud Bárbara
+            MediAgenda Demo
           </p>
           <h2 className="text-xl font-semibold tracking-tight text-texto">{titulo}</h2>
           <p className="text-sm text-texto-suave">
@@ -51,7 +44,7 @@ export function Hoja({
         className="hoja-pie mt-6 border-t border-borde pt-3 text-xs text-texto-suave"
         suppressHydrationWarning
       >
-        Sistema de Citas · impreso el {selloDeImpresion()}
+        MediAgenda Demo · datos ficticios · impreso el {selloDeImpresion()}
       </p>
     </article>
   );

@@ -1,11 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import { cn } from "./ui";
-import { Bell, FileText, Home, Menu, Users, X } from "./icons";
+import { Bell, FileText, Home, LogoDemo, Menu, Users, X } from "./icons";
 import { ICONO_CATEGORIA } from "./iconos-dominio";
 import { CATEGORIAS, pendientesDeHoy } from "@/lib/citas";
 import { hoyISO } from "@/lib/fecha";
@@ -77,28 +76,20 @@ export function Nav() {
     <header className="sticky top-0 z-30 border-b border-borde bg-fondo/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-3 px-4 sm:px-6">
         <Link href="/" className="flex min-w-0 shrink items-center gap-2.5">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white ring-1 ring-borde">
-            <Image
-              src="/escudo-ufm.png"
-              alt="Escudo de la Universidad Francisco Marroquín"
-              width={26}
-              height={33}
-              priority
-            />
-          </span>
+          <LogoDemo width={40} height={40} className="shrink-0" />
           <span className="min-w-0 leading-tight">
             <span className="block truncate text-[15px] font-semibold tracking-tight text-texto">
-              Sistema de Citas
+              MediAgenda
             </span>
             <span className="block truncate text-xs text-texto-suave">
-              Centro de salud Bárbara
+              Sistema de citas · Demo
             </span>
           </span>
         </Link>
 
         {/* La sección actual, para no perder el contexto al cerrar el menú. */}
         {activo && activo.href !== "/" && (
-          <span className="ml-2 hidden items-center gap-1.5 rounded-xl bg-ufm-rojo/20 px-3 py-1.5 text-sm font-medium text-ufm-300 sm:flex">
+          <span className="ml-2 hidden items-center gap-1.5 rounded-xl bg-marca-rojo/20 px-3 py-1.5 text-sm font-medium text-marca-300 sm:flex">
             <activo.icono width={16} height={16} />
             {activo.label}
           </span>
@@ -115,7 +106,7 @@ export function Nav() {
         >
           <Bell width={20} height={20} />
           {pendientes > 0 && (
-            <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-ufm-600 px-1 text-[10px] font-semibold text-white ring-2 ring-fondo">
+            <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-marca-600 px-1 text-[10px] font-semibold text-white ring-2 ring-fondo">
               {pendientes}
             </span>
           )}
@@ -131,7 +122,7 @@ export function Nav() {
             className={cn(
               "flex h-10 w-10 items-center justify-center rounded-xl border transition-colors",
               abierto
-                ? "border-ufm-600 bg-ufm-rojo/20 text-ufm-300"
+                ? "border-marca-600 bg-marca-rojo/20 text-marca-300"
                 : "border-borde bg-superficie-alta text-texto-suave hover:text-texto",
             )}
           >
@@ -155,7 +146,7 @@ export function Nav() {
                     className={cn(
                       "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
                       esta
-                        ? "bg-ufm-rojo/20 text-ufm-300"
+                        ? "bg-marca-rojo/20 text-marca-300"
                         : "text-texto-suave hover:bg-superficie-alta hover:text-texto",
                     )}
                   >

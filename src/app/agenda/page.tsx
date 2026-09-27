@@ -45,7 +45,7 @@ function Agenda() {
       {metaCat && (
         <Link
           href={`/calendario/${metaCat.slug}/?mes=${fecha.slice(0, 7)}`}
-          className="mb-4 inline-flex items-center gap-1.5 text-sm text-texto-suave transition-colors hover:text-ufm-300"
+          className="mb-4 inline-flex items-center gap-1.5 text-sm text-texto-suave transition-colors hover:text-marca-300"
         >
           <ArrowLeft width={16} height={16} />
           Calendario de {metaCat.label}
@@ -148,7 +148,7 @@ function FiltroCategoria({
       className={cn(
         "rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
         activo
-          ? "bg-ufm-600 text-white"
+          ? "bg-marca-600 text-white"
           : "border border-borde bg-superficie-alta text-texto-suave hover:text-texto",
       )}
     >

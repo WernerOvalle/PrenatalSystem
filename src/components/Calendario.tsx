@@ -87,7 +87,7 @@ export function Calendario({
                 className={cn(
                   "text-sm",
                   esHoy
-                    ? "flex h-6 w-6 items-center justify-center rounded-full bg-ufm-oro font-semibold text-fondo"
+                    ? "flex h-6 w-6 items-center justify-center rounded-full bg-marca-oro font-semibold text-fondo"
                     : dia.esDelMes
                       ? "font-medium text-texto"
                       : "text-texto-suave/50",
@@ -96,7 +96,7 @@ export function Calendario({
                 {dia.dia}
               </span>
               {n > 0 && (
-                <span className="inline-flex items-center gap-1 self-start rounded-full bg-ufm-rojo/20 px-1.5 py-0.5 text-xs font-semibold text-ufm-300 ring-1 ring-inset ring-ufm-rojo/50">
+                <span className="inline-flex items-center gap-1 self-start rounded-full bg-marca-rojo/20 px-1.5 py-0.5 text-xs font-semibold text-marca-300 ring-1 ring-inset ring-marca-rojo/50">
                   <Bell width={12} height={12} />
                   {n}
                   <span className="sr-only">

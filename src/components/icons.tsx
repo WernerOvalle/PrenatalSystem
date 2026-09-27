@@ -279,3 +279,39 @@ export function AlertTriangle(props: IconProps) {
     </Base>
   );
 }
+
+export function RotateCcw(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+      <path d="M3 3v5h5" />
+    </Base>
+  );
+}
+
+/**
+ * Logo de la demo: calendario con cruz médica sobre la baldosa coral. Es el
+ * mismo dibujo que `src/app/icon.svg` (el favicon); si cambia uno, cambia el
+ * otro.
+ */
+export function LogoDemo({ titulo, ...props }: IconProps & { titulo?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 32 32"
+      width={32}
+      height={32}
+      role={titulo ? "img" : undefined}
+      aria-hidden={titulo ? undefined : true}
+      {...props}
+    >
+      {titulo && <title>{titulo}</title>}
+      <rect width="32" height="32" rx="8" fill="var(--color-marca-600)" />
+      <g fill="none" stroke="#fff" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+        <rect x="7" y="9" width="18" height="16" rx="3" />
+        <path d="M12 6.5v4M20 6.5v4" />
+        <path d="M16 14v7M12.5 17.5h7" strokeWidth={2.2} />
+      </g>
+    </svg>
+  );
+}

@@ -5,7 +5,7 @@ import { VistaCalendario } from "@/components/VistaCalendario";
 
 /**
  * Con `output: "export"` las rutas dinámicas solo funcionan si se enumeran acá.
- * Son tres y son fijas, así que el export estático genera una página por
+ * Son cuatro y son fijas, así que el export estático genera una página por
  * categoría.
  */
 export function generateStaticParams() {
